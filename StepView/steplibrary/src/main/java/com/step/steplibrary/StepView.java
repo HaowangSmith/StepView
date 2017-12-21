@@ -18,27 +18,27 @@ public class StepView extends View {
     /*attr value*/
     private static int dotCount;
     private int defaultStepNum = 0;
-    private int stepNum;
-    private int defaultNormalLineColor;
-    private int normalLineColor;
-    private int defaultPassLineColor;
-    private int passLineColor;
+    private int   stepNum;
+    private int   defaultNormalLineColor;
+    private int   normalLineColor;
+    private int   defaultPassLineColor;
+    private int   passLineColor;
     private float defaultLineStikeWidth;
     private float lineStikeWidth;
-    private int defaultTextColor;
-    private int textColor;
+    private int   defaultTextColor;
+    private int   textColor;
     private float defaultTextSize;
     private float textSize;
     private float defaultText2DotMargin;
-    private int text2DotMargin;
-    private int defalutMarginLeft;
-    private int defalutMarginRight;
-    private int marginLeft;
-    private int marginright;
+    private int   text2DotMargin;
+    private int   defalutMarginLeft;
+    private int   defalutMarginRight;
+    private int   marginLeft;
+    private int   marginright;
     private float defaultText2BottomMargin;
-    private int text2BottomMargin;
+    private int   text2BottomMargin;
     /*view messured size*/
-    private int width, height;
+    private int   width, height;
     private int    perLineLength;
     private int    perLineHeight;
     private Paint  linePaint;
@@ -50,7 +50,7 @@ public class StepView extends View {
     private Bitmap passed_pic;
     private static String[] texts = {"确认身份信息", "确认入住信息", "选择房型", "支付押金", "完成入住"};
     private float mX;
-    private int mZ;
+    private int   mZ;
     private int[] mPassWH;
     private int[] mNormalWH;
     private int[] mTargetWH;
@@ -120,18 +120,8 @@ public class StepView extends View {
         mPassWH = calculateWidthAndHeight(passed_pic);
         mNormalWH = calculateWidthAndHeight(normal_pic);
         mTargetWH = calculateWidthAndHeight(target_pic);
-        for (int i = 0; i < dotCount; i++) {
 
-            if (i == stepNum) {
-                mZ = mTargetWH[0] / 2;
-            } else if (i > stepNum) {
-                mZ = mPassWH[0] / 2;
-            } else {
-                mZ = mNormalWH[0] / 2;
-            }
-            width = w - marginLeft - marginright - textWidth + mZ;
-        }
-
+        width = w - marginLeft - marginright - textWidth;
         height = h;
         perLineLength = width / (5 - 1);
         perLineHeight = (h - text2DotMargin) / 2;
@@ -150,19 +140,14 @@ public class StepView extends View {
         float stopX = 0;
         for (int i = 0; i < dotCount - 1; i++) {
             if (i == stepNum) {
-                startX = marginLeft + perLineLength * i + mTargetWH[0] / 2;
+                startX = marginLeft + perLineLength * i + mTargetWH[0];
             } else if (i > stepNum) {
-                startX = marginLeft + perLineLength * i + mNormalWH[0] / 2;
+                startX = marginLeft + perLineLength * i + mNormalWH[0];
             } else {
-                startX = marginLeft + perLineLength * i + mPassWH[0] / 2;
+                startX = marginLeft + perLineLength * i + mPassWH[0];
             }
-            if (i + 1 == stepNum) {
-                stopX = marginLeft + perLineLength * (i + 1) - mTargetWH[0] / 2;
-            } else if (i + 1 < stepNum) {
-                stopX = marginLeft + perLineLength * (i + 1) - mPassWH[0] / 2;
-            } else {
-                stopX = marginLeft + perLineLength * (i + 1) - mNormalWH[0] / 2;
-            }
+            stopX = marginLeft + perLineLength * (i + 1);
+
             if (stepNum > i) {
                 linePaint.setColor(passLineColor);
             } else {
@@ -178,14 +163,12 @@ public class StepView extends View {
                 continue;
             }
             if (stepNum > i) {
-                int[] passWH = calculateWidthAndHeight(passed_pic);
-                float left = marginLeft + perLineLength * i - passWH[0] / 2;
-                float top = perLineHeight - passWH[1] / 2;
+                float left = marginLeft + perLineLength * i;
+                float top = perLineHeight - mPassWH[1]/ 2;
                 canvas.drawBitmap(passed_pic, left, top, squarPaint);
             } else {
-                int[] normalWH = calculateWidthAndHeight(normal_pic);
-                float left = marginLeft + perLineLength * i - normalWH[0] / 2;
-                float top = perLineHeight - normalWH[1] / 2;
+                float left = marginLeft + perLineLength * i;
+                float top = perLineHeight -  mNormalWH[1]/ 2;
                 canvas.drawBitmap(normal_pic, left, top, squarPaint);
             }
         }
@@ -201,10 +184,8 @@ public class StepView extends View {
     }
 
     private void drawTargetSquar(Canvas canvas, int i) {
-
-        int[] targetWH = calculateWidthAndHeight(target_pic);
-        float left = marginLeft + perLineLength * i - targetWH[0] / 2;
-        float top = perLineHeight - targetWH[1] / 2;
+        float left = marginLeft + perLineLength * i;
+        float top = perLineHeight - mTargetWH[1] / 2;
         canvas.drawBitmap(target_pic, left, top, squarPaint);
     }
 
@@ -212,14 +193,7 @@ public class StepView extends View {
         for (int i = 0; i < dotCount; i++) {
             String text = texts[i];
             float y = height - text2BottomMargin;
-
-            if (i == stepNum) {
-                mX = marginLeft + perLineLength * i - mTargetWH[0] / 2;
-            } else if (i > stepNum) {
-                mX = marginLeft + perLineLength * i - mPassWH[0] / 2;
-            } else {
-                mX = marginLeft + perLineLength * i - mNormalWH[0] / 2;
-            }
+            mX = marginLeft + perLineLength * i;
             canvas.drawText(text, mX, y, textPaint);
         }
     }
